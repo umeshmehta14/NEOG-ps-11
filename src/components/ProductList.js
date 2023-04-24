@@ -42,6 +42,7 @@ const ProductList = () => {
           )
         )}
       </div>
+      <h1>{filtered.length === 0 && "Data Not Found"}</h1>
     </>
   )
 }
