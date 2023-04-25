@@ -21,24 +21,20 @@ const DataReducer = (state, action)=>{
 
 export const DataProvider = ({children}) => {
     const initialValue = {
-        products:data.filter(({inStock})=> inStock),
         search:false,
         searchValue:"",
         sortBy:"",
-        filterBy:[]
+        filterBy:["inStock"]
     }
     const [state, dispatch] = useReducer(DataReducer, initialValue);
-    const  {products, searchValue,search, sortBy, filterBy} = state;
-    console.log(products.length)
+    const  { searchValue,search, sortBy, filterBy} = state;
 
-    const stockData = filterBy.includes("inStock") ? data : products;
 
-    const filteredData = filterBy.includes("fastDelivery") ? stockData.filter(({fastDelivery})=> fastDelivery): stockData;
+    const filteredData = filterBy.length !== 0 ? data.filter((item)=> filterBy.every((value)=> item[value])): data;
 
     const searchedData = searchValue && search ? filteredData.filter(({name})=> name.toLowerCase().includes(state.searchValue.toLowerCase())) : filteredData;
 
     const filtered = sortBy ? searchedData.sort((a,b)=> sortBy === "lowToHigh" ? a.price - b.price : b.price- a.price) : searchedData ;
-    console.log("filtered",filtered.length)
   return (
     <DataContext.Provider value={{state,dispatch,filtered}}>
       {children}
